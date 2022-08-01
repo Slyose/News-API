@@ -43,7 +43,18 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then((response) => {
         const data = response.body;
-        expect(data.topics).toMatchObject(idealOutputGetTopics);
+        expect(data.topics).toEqual(idealOutputGetTopics);
       });
+  });
+
+  describe("Error handling for invalid endpoint", () => {
+    test("status:404, responds with an error message when passed an non-existant endpoint", () => {
+      return request(app)
+        .get("/api/topics/iDontExist")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid endpoint.");
+        });
+    });
   });
 });
