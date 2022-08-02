@@ -12,6 +12,16 @@ beforeEach(() => {
   return seed(data);
 });
 
+const idealOutputGetTopicByID = {
+  article_id: 1,
+  title: "Living in the shadow of a great man",
+  topic: "mitch",
+  author: "butter_bridge",
+  body: "I find this existence challenging",
+  created_at: "2020-07-09T20:11:00.000Z",
+  votes: 100,
+};
+
 const idealOutputGetTopics = [
   { slug: "mitch", description: "The man, the Mitch, the legend" },
   { slug: "cats", description: "Not dogs" },
@@ -75,13 +85,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         let article = body.article;
-        expect(article.article_id).toBe(1);
-        expect(article.title).toEqual(expect.any(String));
-        expect(article.topic).toEqual(expect.any(String));
-        expect(article.author).toEqual(expect.any(String));
-        expect(article.body).toEqual(expect.any(String));
-        expect(article.created_at).toEqual(expect.any(String));
-        expect(article.votes).toEqual(expect.any(Number));
+        expect(article).toEqual(idealOutputGetTopicByID);
       });
   });
   test("Should return a 404 and 'article_id does not exist' when given an invalid article_ID", () => {
@@ -96,8 +100,8 @@ describe("GET /api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/imNotAnID")
       .expect(400)
-      .then(({ _body }) => {
-        expect(_body.msg).toBe("Bad request");
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
       });
   });
 });
