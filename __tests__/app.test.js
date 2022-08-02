@@ -60,6 +60,36 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("GET /api/topics", () => {
+  test("should respond with an array", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then((response) => {
+        const data = response.body;
+        expect(Array.isArray(data.topics)).toBe(true);
+      });
+  });
+  test("should respond with an array of length 3", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then((response) => {
+        const data = response.body;
+        expect(data.topics.length).toBe(3);
+      });
+  });
+  test("should respond with an array of objects, with a key of slug and description", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then((response) => {
+        const data = response.body;
+        expect(data.topics).toEqual(idealOutputGetTopics);
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id", () => {
   test("Should be able to return an object", () => {
     return request(app)
@@ -91,6 +121,14 @@ describe("GET /api/articles/:article_id", () => {
       .expect(404)
       .then(({ _body }) => {
         expect(_body.msg).toBe("article_id does not exist");
+      });
+  });
+  test('should return an error 400 and msg "Bad request"', () => {
+    return request(app)
+      .get("/api/articles/imNotAnID")
+      .expect(400)
+      .then(({ _body }) => {
+        expect(_body.msg).toBe("Bad request");
       });
   });
 });
