@@ -3,6 +3,7 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+const { response } = require("../app");
 
 afterAll(() => {
   return db.end();
@@ -17,6 +18,17 @@ const idealOutputGetTopics = [
   { slug: "cats", description: "Not dogs" },
   { slug: "paper", description: "what books are made of" },
 ];
+
+describe("Error handling for invalid endpoint", () => {
+  test("status:404, responds with an error message when passed an non-existant endpoint", () => {
+    return request(app)
+      .get("/api/iDontExist")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid endpoint.");
+      });
+  });
+});
 
 describe("GET /api/topics", () => {
   test("should respond with an array", () => {
@@ -46,15 +58,41 @@ describe("GET /api/topics", () => {
         expect(data.topics).toEqual(idealOutputGetTopics);
       });
   });
+});
 
-  describe("Error handling for invalid endpoint", () => {
-    test("status:404, responds with an error message when passed an non-existant endpoint", () => {
-      return request(app)
-        .get("/api/topics/iDontExist")
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Invalid endpoint.");
-        });
-    });
+describe("GET /api/articles/:article_id", () => {
+  test("Should be able to return an object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const articles = response.body;
+        expect(typeof articles).toBe("object");
+      });
+  });
+  test("Should be able to return an object with appropriate keys", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        let article = body.article;
+        console.log(article);
+        expect(article.article_id).toBe(1);
+        expect(article.title).toEqual(expect.any(String));
+        expect(article.topic).toEqual(expect.any(String));
+        expect(article.author).toEqual(expect.any(String));
+        expect(article.body).toEqual(expect.any(String));
+        expect(article.created_at).toEqual(expect.any(String));
+        expect(article.votes).toEqual(expect.any(Number));
+      });
+  });
+  test("Should return a 404 and 'article_id does not exist' when given an invalid article_ID", () => {
+    return request(app)
+      .get("/api/articles/9001")
+      .expect(404)
+      .then(({ _body }) => {
+        console.log(response.body);
+        expect(_body.msg).toBe("article_id does not exist");
+      });
   });
 });
