@@ -76,7 +76,6 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         let article = body.article;
-        console.log(article);
         expect(article.article_id).toBe(1);
         expect(article.title).toEqual(expect.any(String));
         expect(article.topic).toEqual(expect.any(String));
@@ -91,7 +90,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/9001")
       .expect(404)
       .then(({ _body }) => {
-        console.log(response.body);
         expect(_body.msg).toBe("article_id does not exist");
       });
   });
