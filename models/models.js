@@ -29,8 +29,8 @@ exports.updateArticleByID = (id, votes) => {
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({
-          status: 400,
-          msg: "Bad request",
+          status: 404,
+          msg: "Article not found",
         });
       }
       return rows[0];
