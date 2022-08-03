@@ -155,7 +155,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(response._body.msg).toBe("Bad request");
       });
   });
-  test("should respond with a 404 when a non-existant ID is passed", () => {
+  test("should respond with a 404 when a non-existent ID is passed", () => {
     return request(app)
       .patch("/api/articles/9001")
       .send({ inc_votes: 2 })
