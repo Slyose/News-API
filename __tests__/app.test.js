@@ -12,6 +12,16 @@ beforeEach(() => {
   return seed(data);
 });
 
+const idealOutputPatchTopicsByID = {
+  article_id: 1,
+  title: "Living in the shadow of a great man",
+  topic: "mitch",
+  author: "butter_bridge",
+  body: "I find this existence challenging",
+  created_at: "2020-07-09T20:11:00.000Z",
+  votes: 105,
+};
+
 const idealOutputGetTopicByID = {
   article_id: 1,
   title: "Living in the shadow of a great man",
@@ -102,6 +112,56 @@ describe("GET /api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         expect(response._body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("should respond with an object", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then((response) => {
+        const article = response.body;
+        expect(typeof article).toBe("object");
+      });
+  });
+  test("should respond with an article with updated votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then((response) => {
+        const article = response.body;
+        expect(article).toEqual(idealOutputPatchTopicsByID);
+      });
+  });
+  test("should respond with status 400 Bad Request when given a missing input field", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
+      });
+  });
+  test("should respond with status 400 Bad Request when given an incorrect input type", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "word" })
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
+      });
+  });
+  test("should respond with a 404 when a non-existent ID is passed", () => {
+    return request(app)
+      .patch("/api/articles/9001")
+      .send({ inc_votes: 2 })
+      .expect(404)
+      .then((response) => {
+        expect(response._body.msg).toBe("Article not found");
       });
   });
 });
