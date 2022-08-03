@@ -12,6 +12,31 @@ beforeEach(() => {
   return seed(data);
 });
 
+const idealOutputGetUsers = [
+  {
+    username: "butter_bridge",
+    name: "jonny",
+    avatar_url:
+      "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+  },
+  {
+    username: "icellusedkars",
+    name: "sam",
+    avatar_url: "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
+  },
+  {
+    username: "rogersop",
+    name: "paul",
+    avatar_url: "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+  },
+  {
+    username: "lurker",
+    name: "do_nothing",
+    avatar_url:
+      "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+  },
+];
+
 const idealOutputPatchTopicsByID = {
   article_id: 1,
   title: "Living in the shadow of a great man",
@@ -162,6 +187,35 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(404)
       .then((response) => {
         expect(response._body.msg).toBe("Article not found");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("should respond with a an array", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const data = response.body;
+        expect(Array.isArray(data)).toBe(true);
+      });
+  });
+  test("should return an array of the users objects, with keys of username,name and avatar_url", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const data = response.body;
+        expect(data).toEqual(idealOutputGetUsers);
+      });
+  });
+  test("should respond with a satus 404 when passed an invalid route", () => {
+    return request(app)
+      .get("/api/users/notARoute")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid endpoint.");
       });
   });
 });
