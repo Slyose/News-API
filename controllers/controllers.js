@@ -2,6 +2,7 @@ const {
   fetchTopics,
   fetchArticleByID,
   updateArticleByID,
+  fetchUsers,
 } = require("../models/models.js");
 
 exports.getTopics = (req, res) => {
@@ -25,6 +26,17 @@ exports.patchArticleByID = (req, res, next) => {
   updateArticleByID(req.params.article_id, req.body.inc_votes)
     .then((article) => {
       res.send(article);
+      res.status(200);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.send(users);
       res.status(200);
     })
     .catch((err) => {
