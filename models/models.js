@@ -8,7 +8,15 @@ exports.fetchTopics = () => {
 
 exports.fetchArticleByID = (id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
+    .query(
+      `SELECT articles.*,
+       COUNT(comments.article_id)::INTEGER AS comment_count FROM comments
+       LEFT JOIN articles
+       ON comments.article_id = articles.article_id
+       WHERE articles.article_id = $1
+       GROUP BY articles.article_id;`,
+      [id]
+    )
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({
