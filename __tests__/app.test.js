@@ -28,6 +28,7 @@ const idealOutputGetTopicByID = {
   topic: "mitch",
   author: "butter_bridge",
   body: "I find this existence challenging",
+  comment_count: 11,
   created_at: "2020-07-09T20:11:00.000Z",
   votes: 100,
 };
@@ -89,7 +90,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(typeof articles).toBe("object");
       });
   });
-  test("Should be able to return an object with appropriate keys", () => {
+  test("Should be able to return an object with appropriate keys, including comment_count", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
