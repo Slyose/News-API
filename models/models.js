@@ -11,11 +11,11 @@ exports.fetchArticleByID = (id) => {
   return db
     .query(
       `SELECT articles.*,
-       COUNT(comments.article_id)::INTEGER AS comment_count FROM comments
-       LEFT JOIN articles
-       ON comments.article_id = articles.article_id
-       WHERE articles.article_id = $1
-       GROUP BY articles.article_id;`,
+    COUNT(comments.article_id)::INTEGER AS comment_count FROM comments
+    LEFT JOIN articles
+    ON comments.article_id = articles.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;`,
       [id]
     )
     .then(({ rows }) => {
@@ -26,6 +26,21 @@ exports.fetchArticleByID = (id) => {
         });
       }
       return rows[0];
+    });
+};
+
+exports.fetchArticles = () => {
+  return db
+    .query(
+      `SELECT articles.article_id,articles.title,articles.topic,articles.author,articles.created_at,articles.votes,
+      COUNT(comments.article_id)::INTEGER AS comment_count FROM comments
+      RIGHT JOIN articles
+      ON comments.article_id = articles.article_id
+      GROUP BY articles.article_id
+      ORDER BY created_at DESC;`
+    )
+    .then(({ rows: articles }) => {
+      return articles;
     });
 };
 
