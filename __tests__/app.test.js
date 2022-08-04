@@ -4,7 +4,6 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const sort = require("jest-sorted");
-const { string } = require("pg-format");
 
 afterAll(() => {
   return db.end();
@@ -223,7 +222,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("should return an array", () => {
     return request(app)
       .get("/api/articles")
