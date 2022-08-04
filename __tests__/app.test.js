@@ -269,20 +269,4 @@ describe("GET /api/articles", () => {
         );
       });
   });
-  test("should return an array of objects with appropriate properties", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then((response) => {
-        expect(response._body[0]).toEqual({
-          article_id: 3,
-          title: "Eight pug gifs that remind me of mitch",
-          topic: "mitch",
-          author: "icellusedkars",
-          created_at: "2020-11-03T09:12:00.000Z",
-          votes: 0,
-          comment_count: 2,
-        });
-      });
-  });
 });
