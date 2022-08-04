@@ -249,14 +249,14 @@ describe.only("GET /api/articles/:article_id/comments", () => {
         );
       });
   });
-  // test("should respond with a 404 when a non-existent ID is passed", () => {
-  //   return request(app)
-  //     .get("/api/articles/9000001/comments")
-  //     .expect(404)
-  //     .then((response) => {
-  //       expect(response._body.msg).toBe("Article not found");
-  //     });
-  // });
+  test("should respond with a 404 when a non-existent ID is passed", () => {
+    return request(app)
+      .get("/api/articles/9000001/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response._body.msg).toBe("Not found");
+      });
+  });
   test("should respond with a 400 when an invalid ID is passed", () => {
     return request(app)
       .get("/api/articles/banana/comments")

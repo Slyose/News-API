@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { checkExists } = require("../utilities/utils.js");
 
 exports.fetchTopics = () => {
   return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
@@ -57,8 +58,11 @@ exports.fetchCommentsByID = (id) => {
       `SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`,
       [id]
     )
-    .then(({ rows }) => {
+    .then(async ({ rows }) => {
       console.log(rows);
+      if (!rows.length) {
+        await checkExists("articles", "article_id", id);
+      }
       return rows;
     });
 };
