@@ -314,5 +314,12 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(response._body.msg).toBe("Bad request");
       });
   });
+  test("should respond with a 200 when a a valid article with no comments is found", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response._body).toEqual([]);
+      });
+  });
 });
-
