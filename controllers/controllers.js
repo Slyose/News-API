@@ -3,6 +3,7 @@ const {
   fetchArticleByID,
   updateArticleByID,
   fetchUsers,
+  fetchCommentsByID,
   fetchArticles,
 } = require("../models/models.js");
 
@@ -49,6 +50,18 @@ exports.getArticles = (req, res, next) => {
   fetchArticles()
     .then((articles) => {
       res.send(articles);
+      res.status(200);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+
+exports.getCommentsByArticleID = (req, res, next) => {
+  fetchCommentsByID(req.params.article_id)
+    .then((comments) => {
+      res.send(comments);
       res.status(200);
     })
     .catch((err) => {

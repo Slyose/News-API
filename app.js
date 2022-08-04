@@ -10,6 +10,7 @@ const {
   getArticleByID,
   patchArticleByID,
   getUsers,
+  getCommentsByArticleID,
   getArticles,
 } = require("./controllers/controllers.js");
 
@@ -18,6 +19,7 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleByID);
 app.patch("/api/articles/:article_id", patchArticleByID);
 app.get("/api/users", getUsers);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 app.get("/api/articles", getArticles);
 
 app.all("/*", (req, res) => {

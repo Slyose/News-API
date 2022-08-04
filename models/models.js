@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { checkExists } = require("../utilities/utils.js");
 
 exports.fetchTopics = () => {
   return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
@@ -64,4 +65,18 @@ exports.fetchUsers = () => {
   return db.query(`SELECT * FROM users;`).then(({ rows }) => {
     return rows;
   });
+};
+
+exports.fetchCommentsByID = (id) => {
+  return db
+    .query(
+      `SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`,
+      [id]
+    )
+    .then(async ({ rows }) => {
+      if (!rows.length) {
+        await checkExists("articles", "article_id", id);
+      }
+      return rows;
+    });
 };
