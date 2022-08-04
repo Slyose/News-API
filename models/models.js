@@ -59,7 +59,6 @@ exports.fetchCommentsByID = (id) => {
       [id]
     )
     .then(async ({ rows }) => {
-      console.log(rows);
       if (!rows.length) {
         await checkExists("articles", "article_id", id);
       }

@@ -222,7 +222,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
   test("should return an array", () => {
     return request(app)
       .get("/api/articles/1/comments")
