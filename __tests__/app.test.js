@@ -3,6 +3,7 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+const sort = require("jest-sorted");
 
 afterAll(() => {
   return db.end();
@@ -217,6 +218,55 @@ describe("GET /api/users", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Invalid endpoint.");
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("should return an array", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(Array.isArray(response.body)).toBe(true);
+      });
+  });
+  test("should return an array with every article", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response._body.length).toBe(12);
+      });
+  });
+  test("should return an array sorted by created_at", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response._body).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("should return an array of objects with appropriate properties", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response._body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              created_at: expect.any(String),
+              comment_count: expect.any(Number),
+              votes: expect.any(Number),
+            }),
+          ])
+        );
       });
   });
 });
