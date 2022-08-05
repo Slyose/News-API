@@ -270,6 +270,87 @@ describe("GET /api/articles", () => {
         );
       });
   });
+  describe("Query testing", () => {
+    describe("Sort by queries", () => {
+      test("Sort properly when passed a valid sort by query.", () => {
+        return request(app)
+          .get("/api/articles/?sort_by=votes")
+          .expect(200)
+          .then((response) => {
+            expect(response._body).toBeSortedBy("votes", {
+              descending: true,
+            });
+          });
+      });
+      test("Return error 400 bad request when passed an invalid sort query", () => {
+        return request(app)
+          .get("/api/articles/?sort_by=bananas")
+          .expect(400)
+          .then((response) => {
+            expect(response._body.msg).toBe("Bad request");
+          });
+      });
+    });
+    describe("Order by query", () => {
+      test("should be able to sort by ascending order", () => {
+        return request(app)
+          .get("/api/articles/?sort_by=votes&order=ASC")
+          .expect(200)
+          .then((response) => {
+            expect(response._body).toBeSortedBy("votes", {
+              ascending: true,
+            });
+          });
+      });
+      test("should be able to sort by descending order", () => {
+        return request(app)
+          .get("/api/articles/?sort_by=votes&order=DESC")
+          .expect(200)
+          .then((response) => {
+            expect(response._body).toBeSortedBy("votes", {
+              descending: true,
+            });
+          });
+      });
+      test("return error 400 'Bad request' when passed an invalid order by query", () => {
+        return request(app)
+          .get("/api/articles/?sort_by=votes&order=BANANA")
+          .expect(400)
+          .then((response) => {
+            expect(response._body.msg).toBe("Bad request");
+          });
+      });
+    });
+    describe("Filter by query", () => {
+      test("should be able to filter by topic", () => {
+        return request(app)
+          .get("/api/articles/?topic=cats")
+          .expect(200)
+          .then((response) => {
+            expect(response._body.length).toBe(1);
+            expect(response._body).toEqual([
+              {
+                article_id: 5,
+                title: "UNCOVERED: catspiracy to bring down democracy",
+                topic: "cats",
+                author: "rogersop",
+                created_at: "2020-08-03T13:14:00.000Z",
+                votes: 0,
+                comment_count: 2,
+              },
+            ]);
+          });
+      });
+      test("should return an error 404 Not found when passed a non existant topic", () => {
+        return request(app)
+          .get("/api/articles/?topic=bananas")
+          .expect(404)
+          .then((response) => {
+            expect(response._body.msg).toBe("Articles not found");
+          });
+      });
+    });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
