@@ -48,10 +48,14 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
+  let sort_by = req.query.sort_by || "date";
+  let order = req.query.order || "desc";
+  let topic = req.query.topic;
+
   fetchArticles()
     .then((articles) => {
-      res.status(200);
       res.send(articles);
+      res.status(200);
     })
     .catch((err) => {
       next(err);
