@@ -93,7 +93,6 @@ exports.insertCommentsByArticleID = (username, body, article_id) => {
       [body, username, article_id]
     )
     .then(({ rows }) => {
-      console.log(rows[0]);
       return rows[0];
     });
 };
