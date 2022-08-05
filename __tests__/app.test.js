@@ -323,3 +323,15 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("should return an object", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "sample text" })
+      .expect(201)
+      .then((response) => {
+        expect(typeof response.body).toBe("object");
+      });
+  });
+});

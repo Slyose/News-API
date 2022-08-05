@@ -5,6 +5,7 @@ const {
   fetchUsers,
   fetchCommentsByID,
   fetchArticles,
+  insertCommentsByArticleID,
 } = require("../models/models.js");
 
 exports.getTopics = (req, res) => {
@@ -27,8 +28,8 @@ exports.getArticleByID = (req, res, next) => {
 exports.patchArticleByID = (req, res, next) => {
   updateArticleByID(req.params.article_id, req.body.inc_votes)
     .then((article) => {
-      res.send(article);
       res.status(200);
+      res.send(article);
     })
     .catch((err) => {
       next(err);
@@ -38,8 +39,8 @@ exports.patchArticleByID = (req, res, next) => {
 exports.getUsers = (req, res, next) => {
   fetchUsers()
     .then((users) => {
-      res.send(users);
       res.status(200);
+      res.send(users);
     })
     .catch((err) => {
       next(err);
@@ -49,7 +50,18 @@ exports.getUsers = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
   fetchArticles()
     .then((articles) => {
+      res.status(200);
       res.send(articles);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getCommentsByArticleID = (req, res, next) => {
+  fetchCommentsByID(req.params.article_id)
+    .then((comments) => {
+      res.send(comments);
       res.status(200);
     })
     .catch((err) => {
@@ -57,12 +69,15 @@ exports.getArticles = (req, res, next) => {
     });
 };
 
-
-exports.getCommentsByArticleID = (req, res, next) => {
-  fetchCommentsByID(req.params.article_id)
-    .then((comments) => {
-      res.send(comments);
-      res.status(200);
+exports.postCommentsByArticleID = (req, res, next) => {
+  insertCommentsByArticleID(
+    req.body.username,
+    req.body.body,
+    req.params.article_id
+  )
+    .then((comment) => {
+      res.status(201);
+      res.send(comment);
     })
     .catch((err) => {
       next(err);
