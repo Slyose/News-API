@@ -92,7 +92,11 @@ exports.insertCommentsByArticleID = (username, body, article_id) => {
     `,
       [body, username, article_id]
     )
-    .then(({ rows }) => {
+    .then(async ({ rows }) => {
+      console.log(rows[0]);
+      if (!rows[0].length) {
+        await checkExists("articles", "article_id", article_id);
+      }
       return rows[0];
     });
 };

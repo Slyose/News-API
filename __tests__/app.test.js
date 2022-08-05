@@ -370,4 +370,22 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(response._body.msg).toBe("Bad request");
       });
   });
+  test("should respond with a 404 when a non-existent ID is passed", () => {
+    return request(app)
+      .post("/api/articles/900000/comments")
+      .send({ username: "butter_bridge", body: "sample text" })
+      .expect(404)
+      .then((response) => {
+        expect(response._body.msg).toBe("Not found");
+      });
+  });
+  test("should respond with a 400 when an invalid ID is passed", () => {
+    return request(app)
+      .post("/api/articles/banana/comments")
+      .send({ username: "butter_bridge", body: "sample text" })
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
+      });
+  });
 });
