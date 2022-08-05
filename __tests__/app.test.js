@@ -327,6 +327,7 @@ describe("GET /api/articles", () => {
           .get("/api/articles/?topic=cats")
           .expect(200)
           .then((response) => {
+            expect(response._body.length).toBe(1);
             expect(response._body).toEqual([
               {
                 article_id: 5,
