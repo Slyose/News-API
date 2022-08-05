@@ -6,6 +6,7 @@ const {
   fetchCommentsByID,
   fetchArticles,
   insertCommentsByArticleID,
+  removeCommentsByID,
 } = require("../models/models.js");
 
 exports.getTopics = (req, res) => {
@@ -48,9 +49,9 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  let sort_by = req.query.sort_by || "created_at";
-  let order = req.query.order || "DESC";
-  let topic = req.query.topic;
+  const sort_by = req.query.sort_by || "created_at";
+  const order = req.query.order || "DESC";
+  const topic = req.query.topic;
 
   fetchArticles(sort_by, order, topic)
     .then((articles) => {
@@ -82,6 +83,17 @@ exports.postCommentsByArticleID = (req, res, next) => {
     .then((comment) => {
       res.status(201);
       res.send(comment);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentsByID = (req, res, next) => {
+  removeCommentsByID(req.params.comment_id)
+    .then(() => {
+      res.status(204);
+      res.send();
     })
     .catch((err) => {
       next(err);
