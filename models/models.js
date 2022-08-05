@@ -30,19 +30,37 @@ exports.fetchArticleByID = (id) => {
     });
 };
 
-exports.fetchArticles = () => {
-  return db
-    .query(
-      `SELECT articles.article_id,articles.title,articles.topic,articles.author,articles.created_at,articles.votes,
-      COUNT(comments.article_id)::INTEGER AS comment_count FROM comments
-      RIGHT JOIN articles
-      ON comments.article_id = articles.article_id
-      GROUP BY articles.article_id
-      ORDER BY created_at DESC;`
-    )
-    .then(({ rows: articles }) => {
+exports.fetchArticles = (sort_by, order, topic) => {
+  let orderBy = `ORDER BY ${sort_by} ${order}`;
+
+  let oneTrueStr = `SELECT articles.article_id,articles.title,articles.topic,articles.author,articles.created_at,articles.votes,
+  COUNT(comments.article_id)::INTEGER AS comment_count FROM comments
+  RIGHT JOIN articles
+  ON comments.article_id = articles.article_id `;
+
+  if (!topic) {
+    oneTrueStr += `GROUP BY articles.article_id ` + orderBy;
+    return db.query(oneTrueStr).then(({ rows: articles }) => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Articles not found",
+        });
+      }
       return articles;
     });
+  } else {
+    oneTrueStr += `WHERE topic = $1 GROUP BY articles.article_id ` + orderBy;
+    return db.query(oneTrueStr, [topic]).then(({ rows: articles }) => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Articles not found",
+        });
+      }
+      return articles;
+    });
+  }
 };
 
 exports.updateArticleByID = (id, votes) => {

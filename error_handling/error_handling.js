@@ -15,6 +15,9 @@ exports.handleServerError = (err, req, res, next) => {
   if (err.code === "23503") {
     res.status(400).send({ msg: "Bad request" });
   }
+  if (err.code === "42703" || err.code === "42601") {
+    res.status(400).send({ msg: "Bad request" });
+  }
   if (err.code === "23502") {
     res.status(400).send({ msg: "Bad request" });
   } else res.status(500).send("Server Error!");
