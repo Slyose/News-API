@@ -12,6 +12,7 @@ const {
   getUsers,
   getCommentsByArticleID,
   getArticles,
+  postCommentsByArticleID,
 } = require("./controllers/controllers.js");
 
 app.use(express.json());
@@ -21,6 +22,7 @@ app.patch("/api/articles/:article_id", patchArticleByID);
 app.get("/api/users", getUsers);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 app.get("/api/articles", getArticles);
+app.post("/api/articles/:article_id/comments", postCommentsByArticleID);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Invalid endpoint." });

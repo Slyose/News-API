@@ -4,6 +4,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const sort = require("jest-sorted");
+const { response } = require("../app");
 
 afterAll(() => {
   return db.end();
@@ -320,6 +321,71 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then((response) => {
         expect(response._body).toEqual([]);
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("should return the posted comment", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "sample text" })
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            author: "butter_bridge",
+            body: "sample text",
+            article_id: 1,
+            created_at: expect.any(String),
+            votes: 0,
+          })
+        );
+      });
+  });
+  test("should return 400 Bad Request for missing required fields in input", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({})
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
+      });
+  });
+  test("should return 400 Bad Request for incorrect types in input", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: 1, body: 1 })
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
+      });
+  });
+  test("should return 400 Bad Request for one missing input field", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge" })
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
+      });
+  });
+  test("should respond with a 404 when a non-existent ID is passed", () => {
+    return request(app)
+      .post("/api/articles/900000/comments")
+      .send({ username: "butter_bridge", body: "sample text" })
+      .expect(404)
+      .then((response) => {
+        expect(response._body.msg).toBe("Not found");
+      });
+  });
+  test("should respond with a 400 when an invalid ID is passed", () => {
+    return request(app)
+      .post("/api/articles/banana/comments")
+      .send({ username: "butter_bridge", body: "sample text" })
+      .expect(400)
+      .then((response) => {
+        expect(response._body.msg).toBe("Bad request");
       });
   });
 });

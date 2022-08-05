@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const comments = require("../db/data/test-data/comments");
 const { checkExists } = require("../utilities/utils.js");
 
 exports.fetchTopics = () => {
@@ -78,5 +79,23 @@ exports.fetchCommentsByID = (id) => {
         await checkExists("articles", "article_id", id);
       }
       return rows;
+    });
+};
+
+exports.insertCommentsByArticleID = (username, body, article_id) => {
+  return db
+    .query(
+      `
+    INSERT INTO comments(body,author,article_id)
+    VALUES ($1,$2,$3)
+    RETURNING *;
+    `,
+      [body, username, article_id]
+    )
+    .then(async ({ rows }) => {
+      if (!rows[0].length) {
+        await checkExists("articles", "article_id", article_id);
+      }
+      return rows[0];
     });
 };
