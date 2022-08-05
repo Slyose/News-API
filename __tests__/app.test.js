@@ -471,14 +471,9 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("DELETE /api/comments/:comment_id", () => {
+describe("DELETE /api/comments/:comment_id", () => {
   test("should respond with a status 204", () => {
-    return request(app)
-      .delete("/api/comments/1")
-      .expect(204)
-      .then((response) => {
-        expect(response._body).toBe(undefined);
-      });
+    return request(app).delete("/api/comments/1").expect(204);
   });
   test("should respond with a status 404 if no comment with given ID is found", () => {
     return request(app)
