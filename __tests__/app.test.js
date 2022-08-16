@@ -492,3 +492,9 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("GET /api", () => {
+  test("should return status 200 OK", () => {
+    return request(app).get("/api").expect(200);
+  });
+});

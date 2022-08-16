@@ -14,6 +14,7 @@ const {
   getArticles,
   postCommentsByArticleID,
   deleteCommentsByID,
+  getAllApi,
 } = require("./controllers/controllers.js");
 
 app.use(express.json());
@@ -25,6 +26,7 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 app.get("/api/articles", getArticles);
 app.post("/api/articles/:article_id/comments", postCommentsByArticleID);
 app.delete("/api/comments/:comment_id", deleteCommentsByID);
+app.get("/api", getAllApi);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Invalid endpoint." });
