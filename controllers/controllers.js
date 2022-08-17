@@ -1,4 +1,5 @@
 const fs = require("fs/promises");
+const endpoints = require("../endpoints.json");
 
 const {
   fetchTopics,
@@ -102,12 +103,6 @@ exports.deleteCommentsByID = (req, res, next) => {
     });
 };
 
-exports.getAllApi = (req, res, next) => {
-  fs.readFile(`${__dirname}/../endpoints.json`, "utf-8")
-    .then((endpoints) => {
-      res.send({ endpoints });
-    })
-    .catch((err) => {
-      next(err);
-    });
+exports.getAllApi = (req, res) => {
+  res.send(endpoints);
 };
