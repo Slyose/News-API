@@ -6,18 +6,20 @@ This is an API built for the purpose of accessing application data programmatica
 
 _Needs Node.js version 16.17.0 & Postgres 12 or above_
 
-1. Run `npm i` in the terminal
+1. Make a local copy of the repo with `git clone https://github.com/Slyose/News-API`
 
-2. Run `npm run setup-dbs` in the terminal to create the test and development databases.
+2. Run `npm i` in the terminal
 
-3. Run the command `npm run seed` in the terminal to insert data into the databases.
+3. Run `npm run setup-dbs` in the terminal to create the test and development databases.
 
-4. Create two .env files containing the names of the psql database you want to connect to.
+4. Run the command `npm run seed` in the terminal to insert data into the databases.
+
+5. Create two .env files containing the names of the psql database yo u want to connect to.
 
    - `.env.test` should contain `PGDATABASE=nc_news_test`
    - `.env.development` should contain `PGDATABASE=nc_news`
 
-5. Run `npm test` to ensure that setup has been successful and that the API is functional.
+6. Run `npm test` to ensure that setup has been successful and that the API is functional.
 
 ## Live Version
 
