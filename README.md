@@ -10,14 +10,14 @@ _Needs Node.js version 16.17.0 & Postgres 12 or above_
 
 2. Run `npm i` in the terminal
 
-3. Run `npm run setup-dbs` in the terminal to create the test and development databases.
-
-4. Run the command `npm run seed` in the terminal to insert data into the databases.
-
-5. Create two .env files containing the names of the psql database yo u want to connect to.
+3. Create two .env files containing the names of the psql database yo u want to connect to.
 
    - `.env.test` should contain `PGDATABASE=nc_news_test`
    - `.env.development` should contain `PGDATABASE=nc_news`
+
+4. Run `npm run setup-dbs` in the terminal to create the test and development databases.
+
+5. Run the command `npm run seed` in the terminal to insert data into the databases.
 
 6. Run `npm test` to ensure that setup has been successful and that the API is functional.
 
