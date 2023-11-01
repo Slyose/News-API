@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const {
   handleCustomError,
@@ -18,6 +19,7 @@ const {
 } = require("./controllers/controllers.js");
 
 app.use(express.json());
+app.use(cors());
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleByID);
 app.patch("/api/articles/:article_id", patchArticleByID);
