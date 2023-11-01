@@ -2,6 +2,16 @@
 
 This is an API built for the purpose of accessing application data programmatically. The intention of this API is to mimic the building of a real world backend servive to provide information to the front end architecture.
 
+The **live version** of this API is hosted with heroku and can be accessed at:
+
+**https://slate-gray-reindeer-tutu.cyclic.app/api**
+
+## Tech Stack
+This API is using:
+- Javascript for the server, with express as an api framework
+- pgSQL for the database
+- Jest to write a testing suite that is run before changes can be pushed to github (thanks to an npm package called huksy).
+
 ## Steps to setup and test API on a new machine
 
 _Needs Node.js version 16.17.0 & Postgres 12 or above_
@@ -21,8 +31,4 @@ _Needs Node.js version 16.17.0 & Postgres 12 or above_
 
 6. Run `npm test` to ensure that setup has been successful and that the API is functional.
 
-## Live Version
 
-The live version of this API is hosted with heroku and can be accessed at:
-
-https://modou-nc-news.herokuapp.com/api
